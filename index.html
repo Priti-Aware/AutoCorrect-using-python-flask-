@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autocorrect</title>
+    <style>
+        h1 {
+    color: #ff0000;
+    font-family: Arial, sans-serif;
+}
+
+/* Style for input field */
+#inputWord {
+    padding: 5px;
+    margin: 10px 0;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Style for button */
+button {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Style for table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Style for table headers */
+th {
+    background-color: #f2f2f2;
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+/* Style for table data */
+td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+    </style>
+</head>
+<body style="margin: 40px 100px;">
+    <h1>Autocorrect</h1>
+    <input type="text" id="inputWord" placeholder="Enter a word" >
+    <button onclick="autocorrect()">Autocorrect</button>
+    <table id="resultTable">
+        <thead>
+            <tr>
+                <th>Autocorrected Word</th>
+                <th>Probability</th>
+                <th>Similarity</th>
+            </tr>
+        </thead>
+        <tbody id="resultBody">
+            <!-- Autocorrected words will be displayed here -->
+        </tbody>
+    </table>
+
+    <script>
+        function autocorrect() {
+            var inputWord = document.getElementById('inputWord').value;
+            fetchAutocorrect(inputWord);
+        }
+
+        function fetchAutocorrect(inputWord) {
+            fetch('/autocorrect?inputWord=' + inputWord)
+            .then(response => response.json())
+            .then(data => displayAutocorrectedWords(data));
+        }
+
+        function displayAutocorrectedWords(words) {
+            var tableBody = document.getElementById('resultBody');
+            tableBody.innerHTML = '';
+
+            words.forEach(word => {
+                var row = tableBody.insertRow();
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                cell1.innerHTML = word.Word;
+                cell2.innerHTML = word.Prob.toFixed(4);
+                cell3.innerHTML = word.Similarity.toFixed(4);
+            });
+        }
+    </script>
+</body>
+</html>
